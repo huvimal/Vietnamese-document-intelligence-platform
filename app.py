@@ -15,8 +15,7 @@ def load_ocr():
     return PaddleOCR(
         use_textline_orientation=True,
         lang='en',
-        ocr_version='PP-OCRv4',
-        show_log=False
+        ocr_version='PP-OCRv4'
     )
 
 ocr = load_ocr()
@@ -40,12 +39,13 @@ if uploaded_file:
 
     extracted_text = []
 
-    for line in result:
-        for word in line:
-            try:
+    try:
+        for line in result:
+            for word in line:
                 extracted_text.append(word[1][0])
-            except:
-                pass
+
+    except:
+        extracted_text.append("OCR parsing error")
 
     final_text = "\n".join(extracted_text)
 
