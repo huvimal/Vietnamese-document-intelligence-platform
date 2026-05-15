@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+
+# Environment
+.env
+
+# Streamlit
+.streamlit/
+
+# Uploaded files
+uploaded_docs/
+temp_pages/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
