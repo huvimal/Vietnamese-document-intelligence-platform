@@ -3,7 +3,6 @@ from paddleocr import PaddleOCR
 from PIL import Image
 import tempfile
 
-# Sửa lỗi ngoặc kép ở đây
 st.set_page_config(
     page_title="Vietnamese Document Intelligence",
     layout="wide"
@@ -11,10 +10,16 @@ st.set_page_config(
 
 st.title("📄 Vietnamese Document Intelligence Platform")
 
-ocr = PaddleOCR(
-    use_angle_cls=True,
-    lang='vi'
-)
+@st.cache_resource
+def load_ocr():
+    return PaddleOCR(
+        use_textline_orientation=True,
+        lang='en',
+        ocr_version='PP-OCRv4',
+        show_log=False
+    )
+
+ocr = load_ocr()
 
 uploaded_file = st.file_uploader(
     "Upload Document",
@@ -22,25 +27,30 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file:
+
     image = Image.open(uploaded_file)
+
     st.image(image, caption="Uploaded Image")
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+
         image.save(tmp.name)
-        # PaddleOCR trả về danh sách, cần xử lý cẩn thận
+
         result = ocr.ocr(tmp.name)
 
     extracted_text = []
-    
-    # Kiểm tra kết quả ocr trước khi lặp
-    if result and result[0]:
-        for line in result:
-            for word in line:
+
+    for line in result:
+        for word in line:
+            try:
                 extracted_text.append(word[1][0])
+            except:
+                pass
 
     final_text = "\n".join(extracted_text)
 
     st.subheader("OCR Result")
+
     st.text_area(
         "Extracted Text",
         final_text,
